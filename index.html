@@ -1,66 +1,885 @@
-<!DOCTYPE html><html lang="fr">
+
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Liste des Produits - Android Store</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Android Store - Boutique Premium</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eef2f5; margin: 0; padding: 0; }
-    .container { max-width: 900px; margin: 2rem auto; padding: 1rem; }
-    h1 { text-align: center; color: #333; margin-bottom: 1rem; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
-    .card { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-    .card img { width: 100%; border-radius: 5px; }
-    .card h2 { font-size: 1.2rem; margin: 0.5rem 0; color: #007BFF; }
-    .card p { flex-grow: 1; color: #555; }
-    .card button { padding: 0.6rem; border: none; border-radius: 5px; background: #28a745; color: #fff; cursor: pointer; }
-    .card button:hover { background: #1e7e34; }
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #059669;
+      --accent: #f59e0b;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --light-gray: #e2e8f0;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Header styles */
+    .header-container {
+      position: relative;
+      height: 350px;
+      overflow: hidden;
+      margin-bottom: 90px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .cover-photo {
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(135deg, rgba(37, 99, 235, 0.85) 0%, rgba(29, 78, 216, 0.9) 100%), 
+        url('https://images.unsplash.com/photo-1609921212029-bb5a28e60960?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80') center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.5s ease;
+    }
+    
+    .header-container:hover .cover-photo {
+      transform: scale(1.02);
+    }
+    
+    .shop-title {
+      color: white;
+      text-align: center;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      max-width: 80%;
+      animation: fadeInDown 1s ease;
+    }
+    
+    .shop-title h1 {
+      font-weight: 800;
+      letter-spacing: 1px;
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    
+    .shop-title p {
+      font-size: 1.3rem;
+      margin-top: 10px;
+      font-weight: 300;
+      opacity: 0.9;
+    }
+    
+    /* Photo de profil */
+    .profile-pic {
+      position: absolute;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 5px solid white;
+      background: #fff;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s ease;
+      z-index: 10;
+      animation: scaleIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .profile-pic:hover {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: all 0.5s ease;
+    }
+    
+    .profile-pic:hover img {
+      transform: scale(1.1);
+    }
+    
+    .profile-pic::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 50%;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+      pointer-events: none;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: var(--dark);
+      margin: 2rem 0 3rem;
+      font-size: 2.5rem;
+      position: relative;
+      padding-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 5px;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 20px 0;
+    }
+    
+    /* Carte produit */
+    .card {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+    
+    .card-image-container {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+      transform-origin: center;
+    }
+    
+    .card:hover img {
+      transform: scale(1.08);
+    }
+    
+    .card-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--secondary);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      z-index: 2;
+    }
+    
+    .card-content {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .card h2 {
+      font-size: 1.4rem;
+      margin: 0 0 0.8rem;
+      color: var(--dark);
+      font-weight: 700;
+    }
+    
+    .card p {
+      flex-grow: 1;
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    .price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0.5rem 0;
+    }
+    
+    .card button {
+      padding: 0.9rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--secondary);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1rem;
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+    }
+    
+    .card button:hover {
+      background: #047857;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(5, 150, 105, 0.35);
+    }
+    
+    .card button i {
+      font-size: 1rem;
+    }
+
+    /* Modal styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .form-box {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      transform: translateY(30px);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .modal.active .form-box {
+      transform: translateY(0);
+    }
+    
+    .form-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+    
+    .form-box h3 {
+      text-align: center;
+      margin-bottom: 1.8rem;
+      color: var(--dark);
+      font-size: 1.5rem;
+      font-weight: 700;
+      padding-top: 10px;
+    }
+    
+    .form-box input, .form-box button {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--light-gray);
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    
+    .form-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+    
+    .form-box p {
+      font-weight: bold;
+      margin: 1.5rem 0;
+      text-align: center;
+      font-size: 1.3rem;
+      color: var(--primary);
+      padding: 10px;
+      background: #f0f9ff;
+      border-radius: 10px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .form-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 1.5rem;
+    }
+    
+    .form-buttons button {
+      flex: 1;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1.05rem;
+    }
+    
+    #submitOrder {
+      background: var(--secondary);
+      color: white;
+      box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+    }
+    
+    #submitOrder:hover {
+      background: #047857;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+    }
+    
+    .cancel-btn {
+      background: #f1f5f9;
+      color: var(--gray);
+      border: 1px solid var(--light-gray);
+    }
+    
+    .cancel-btn:hover {
+      background: #e2e8f0;
+      transform: translateY(-3px);
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 3rem 0 2rem;
+      margin-top: 4rem;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 0 20px;
+    }
+    
+    .footer-section h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .footer-section h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary);
+    }
+    
+    .footer-section p, .footer-section a {
+      color: #cbd5e1;
+      margin-bottom: 0.8rem;
+      display: block;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .footer-section a:hover {
+      color: white;
+      padding-left: 5px;
+    }
+    
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+    
+    .social-links a:hover {
+      background: var(--primary);
+      transform: translateY(-5px);
+      padding-left: 0;
+    }
+    
+    .copyright {
+      text-align: center;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid #334155;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+    
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes scaleIn {
+      from {
+        transform: translateX(-50%) scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+      .header-container {
+        height: 320px;
+        margin-bottom: 85px;
+      }
+      
+      .shop-title h1 {
+        font-size: 2.4rem;
+      }
+      
+      .profile-pic {
+        width: 130px;
+        height: 130px;
+        bottom: -55px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header-container {
+        height: 280px;
+        margin-bottom: 80px;
+      }
+      
+      .shop-title h1 {
+        font-size: 2rem;
+      }
+      
+      .shop-title p {
+        font-size: 1.1rem;
+      }
+      
+      .profile-pic {
+        width: 110px;
+        height: 110px;
+        bottom: -45px;
+      }
+      
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+      
+      .card-image-container {
+        height: 200px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .header-container {
+        height: 250px;
+        margin-bottom: 70px;
+      }
+      
+      .shop-title h1 {
+        font-size: 1.8rem;
+      }
+      
+      .shop-title p {
+        font-size: 1rem;
+      }
+      
+      .profile-pic {
+        width: 100px;
+        height: 100px;
+        bottom: -40px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-box {
+        padding: 1.8rem;
+      }
+    }
+    
+    /* Loading spinner */
+    .loader {
+      display: none;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--primary);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 2rem auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
+  <!-- Header avec photo de couverture et profil -->
+  <header class="header-container">
+    <div class="cover-photo">
+      <div class="shop-title">
+        <h1>Android Store</h1>
+        <p>Votre boutique premium de téléphones Android</p>
+      </div>
+    </div>
+    
+    <div class="profile-pic">
+      <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Logo boutique">
+    </div>
+  </header>
+  
+  <!-- Contenu principal -->
   <div class="container">
     <h1>Nos Téléphones Android</h1>
-    <div id="productGrid" class="grid"></div>
-  </div>  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    
+    <div id="loader" class="loader"></div>
+    
+    <div id="productGrid" class="grid">
+      <!-- Les produits seront chargés dynamiquement ici -->
+    </div>
+  </div>
+  
+  <!-- MODAL DE COMMANDE -->
+  <div id="modal" class="modal">
+    <div class="form-box">
+      <h3>Commander le produit</h3>
+      <input type="text" id="fullName" placeholder="Nom complet" required />
+      <input type="text" id="phone" placeholder="Numéro WhatsApp" required />
+      <input type="text" id="city" placeholder="Ville" required />
+      <input type="text" id="area" placeholder="Quartier" required />
+      <input type="number" id="quantity" placeholder="Quantité" min="1" value="1" required />
+      <p id="totalPrice">Total: 0 Ar</p>
+      <div class="form-buttons">
+        <button id="submitOrder">Valider la commande</button>
+        <button id="cancelOrder" class="cancel-btn">Annuler</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Android Store</h3>
+        <p>Votre boutique de confiance pour les téléphones Android de qualité à Madagascar.</p>
+        <p>Nous offrons les meilleurs produits avec garantie et service après-vente.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Liens rapides</h3>
+        <a href="#">Accueil</a>
+        <a href="#">Produits</a>
+        <a href="#">Promotions</a>
+        <a href="#">À propos</a>
+        <a href="#">Contact</a>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <div class="contact-info">
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Antananarivo, Madagascar</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-phone"></i>
+            <span>+261 34 12 345 67</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>contact@androidstore.mg</span>
+          </div>
+        </div>
+        
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      &copy; 2023 Android Store. Tous droits réservés.
+    </div>
+  </footer>
+
+  <!-- SCRIPT FIREBASE & LOGIQUE -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      onSnapshot, 
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Configuration Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAC-P6WFH1kqfYQi3PdCWpy4LSUqvtX_vo",
       authDomain: "mila-vola.firebaseapp.com",
       projectId: "mila-vola",
-      storageBucket: "mila-vola.firebasestorage.app",
+      storageBucket: "mila-vola.appspot.com",
       messagingSenderId: "690624768352",
       appId: "1:690624768352:web:668994ef2664c5b99dd605",
       measurementId: "G-C3FZTKQHFP"
     };
 
+    // Initialiser Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    
+    // Références aux éléments du DOM
     const grid = document.getElementById('productGrid');
+    const modal = document.getElementById('modal');
+    const loader = document.getElementById('loader');
+    let currentProduct = null;
 
-    onSnapshot(collection(db, 'products'), snapshot => {
+    // Afficher le loader
+    loader.style.display = 'block';
+    
+    // Charger les produits depuis Firestore
+    onSnapshot(collection(db, 'products'), (snapshot) => {
       grid.innerHTML = '';
+      loader.style.display = 'none';
+      
       snapshot.forEach(doc => {
-        const { name, price, image } = doc.data();
-        const card = document.createElement('div'); card.className = 'card';
+        const product = doc.data();
+        const card = document.createElement('div');
+        card.className = 'card';
         card.innerHTML = `
-          <img src="${image}" alt="${name}" />
-          <h2>${name}</h2>
-          <p>Prix: ${price.toLocaleString('fr-FR')} Ar</p>
-          <button data-id="${doc.id}">Commander</button>
+          <div class="card-image-container">
+            <img src="${product.image}" alt="${product.name}" />
+            <div class="card-badge">${product.badge || 'Nouveau'}</div>
+          </div>
+          <div class="card-content">
+            <h2>${product.name}</h2>
+            <p>${product.description}</p>
+            <div class="features">
+              ${product.features ? product.features.map(feat => 
+                `<div class="feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>${feat}</span>
+                </div>`
+              ).join('') : ''}
+            </div>
+            <div class="price">${product.price.toLocaleString('fr-FR')} Ar</div>
+            <button data-id="${doc.id}" data-name="${product.name}" data-price="${product.price}">
+              <i class="fas fa-shopping-cart"></i> Commander
+            </button>
+          </div>
         `;
         grid.appendChild(card);
       });
+      
+      // Ajouter les gestionnaires d'événements aux boutons
+      document.querySelectorAll('.card button').forEach(button => {
+        button.addEventListener('click', function() {
+          currentProduct = {
+            id: this.dataset.id,
+            name: this.dataset.name,
+            price: parseInt(this.dataset.price)
+          };
+          document.getElementById('quantity').value = 1;
+          document.getElementById('totalPrice').textContent = `Total: ${currentProduct.price.toLocaleString('fr-FR')} Ar`;
+          modal.classList.add('active');
+        });
+      });
+    }, (error) => {
+      console.error("Erreur lors du chargement des produits:", error);
+      loader.style.display = 'none';
+      grid.innerHTML = '<p class="error">Erreur de chargement des produits. Veuillez réessayer.</p>';
     });
 
-    grid.addEventListener('click', e => {
-      if (e.target.tagName === 'BUTTON') {
-        const pid = e.target.dataset.id;
-        window.location.href = `order.html?productId=${pid}`;
+    // Fermer modal
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    // Annuler la commande
+    document.getElementById('cancelOrder').addEventListener('click', closeModal);
+
+    // Calcul automatique total
+    document.getElementById('quantity').addEventListener('input', () => {
+      const qty = parseInt(document.getElementById('quantity').value);
+      if (currentProduct && qty > 0) {
+        document.getElementById('totalPrice').textContent = `Total: ${(qty * currentProduct.price).toLocaleString('fr-FR')} Ar`;
       }
     });
-  </script><!-- admin.html -->
-  
-  
-  
-  
+
+    // Soumettre commande
+    document.getElementById('submitOrder').addEventListener('click', async () => {
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const area = document.getElementById('area').value.trim();
+      const quantity = parseInt(document.getElementById('quantity').value);
+      const totalPrice = document.getElementById('totalPrice');
+
+      if (!fullName || !phone || !city || !area || quantity <= 0) {
+        alert("Veuillez remplir tous les champs correctement!");
+        return;
+      }
+
+      const total = quantity * currentProduct.price;
+      totalPrice.textContent = `Total: ${total.toLocaleString('fr-FR')} Ar`;
+      
+      // Afficher un indicateur de chargement
+      const submitBtn = document.getElementById('submitOrder');
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
+      submitBtn.disabled = true;
+
+      try {
+        // Enregistrer la commande dans Firestore
+        await addDoc(collection(db, "orders"), {
+          productId: currentProduct.id,
+          productName: currentProduct.name,
+          quantity: quantity,
+          total: total,
+          fullName: fullName,
+          phone: phone,
+          city: city,
+          area: area,
+          timestamp: serverTimestamp(),
+          status: "nouveau"
+        });
+
+        // Réinitialiser le formulaire
+        document.getElementById('fullName').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('area').value = '';
+        document.getElementById('quantity').value = '1';
+        
+        // Afficher un message de succès
+        alert(`Commande réussie!\n${quantity}x ${currentProduct.name}\nTotal: ${total.toLocaleString('fr-FR')} Ar\n\nNous vous contacterons sur WhatsApp pour la livraison.`);
+        closeModal();
+      } catch (error) {
+        console.error("Erreur lors de l'enregistrement de la commande:", error);
+        alert("Une erreur s'est produite. Veuillez réessayer.");
+      } finally {
+        // Réinitialiser le bouton
+        submitBtn.textContent = originalBtnText;
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
