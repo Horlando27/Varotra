@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liste des Produits - Android Store</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eef2f5; margin: 0; padding: 0; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+    h1 { text-align: center; color: #333; margin-bottom: 1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+    .card { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+    .card img { width: 100%; border-radius: 5px; }
+    .card h2 { font-size: 1.2rem; margin: 0.5rem 0; color: #007BFF; }
+    .card p { flex-grow: 1; color: #555; }
+    .card button { padding: 0.6rem; border: none; border-radius: 5px; background: #28a745; color: #fff; cursor: pointer; }
+    .card button:hover { background: #1e7e34; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Nos Téléphones Android</h1>
+    <div id="productGrid" class="grid"></div>
+  </div>  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAC-P6WFH1kqfYQi3PdCWpy4LSUqvtX_vo",
+      authDomain: "mila-vola.firebaseapp.com",
+      projectId: "mila-vola",
+      storageBucket: "mila-vola.firebasestorage.app",
+      messagingSenderId: "690624768352",
+      appId: "1:690624768352:web:668994ef2664c5b99dd605",
+      measurementId: "G-C3FZTKQHFP"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const grid = document.getElementById('productGrid');
+
+    onSnapshot(collection(db, 'products'), snapshot => {
+      grid.innerHTML = '';
+      snapshot.forEach(doc => {
+        const { name, price, image } = doc.data();
+        const card = document.createElement('div'); card.className = 'card';
+        card.innerHTML = `
+          <img src="${image}" alt="${name}" />
+          <h2>${name}</h2>
+          <p>Prix: ${price.toLocaleString('fr-FR')} Ar</p>
+          <button data-id="${doc.id}">Commander</button>
+        `;
+        grid.appendChild(card);
+      });
+    });
+
+    grid.addEventListener('click', e => {
+      if (e.target.tagName === 'BUTTON') {
+        const pid = e.target.dataset.id;
+        window.location.href = `order.html?productId=${pid}`;
+      }
+    });
+  </script><!-- admin.html -->
+  
+  
+  
+  
